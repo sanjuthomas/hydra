@@ -1,0 +1,20 @@
+CREATE TABLE `hydra_oauth2_trusted_jwt_bearer_issuer` (
+  `id` varchar(36) NOT NULL,
+  `issuer` varchar(255) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `scope` text NOT NULL,
+  `key_set` varchar(255) NOT NULL,
+  `key_id` varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `expires_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `nid` char(36) NOT NULL,
+  `allow_any_subject` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `issuer` (`issuer`,`subject`,`key_id`,`nid`),
+  KEY `hydra_oauth2_trusted_jwt_bearer_issuer_nid_fk_idx` (`nid`),
+  KEY `hydra_oauth2_trusted_jwt_bearer_issuer_ibfk_1` (`key_set`,`key_id`,`nid`),
+  KEY `hydra_oauth2_trusted_jwt_bearer_issuer_expires_at_idx` (`expires_at`),
+  KEY `hydra_oauth2_trusted_jwt_bearer_issuer_nid_idx` (`id`,`nid`),
+  CONSTRAINT `hydra_oauth2_trusted_jwt_bearer_issuer_ibfk_1` FOREIGN KEY (`key_set`, `key_id`, `nid`) REFERENCES `hydra_jwk` (`sid`, `kid`, `nid`) ON DELETE CASCADE,
+  CONSTRAINT `hydra_oauth2_trusted_jwt_bearer_issuer_nid_fk_idx` FOREIGN KEY (`nid`) REFERENCES `networks` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

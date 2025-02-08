@@ -1,0 +1,22 @@
+CREATE TABLE `hydra_oauth2_logout_request` (
+  `challenge` varchar(36) NOT NULL,
+  `verifier` varchar(36) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `sid` varchar(36) NOT NULL,
+  `client_id` varchar(255) DEFAULT NULL,
+  `request_url` text NOT NULL,
+  `redir_url` text NOT NULL,
+  `was_used` tinyint(1) NOT NULL DEFAULT '0',
+  `accepted` tinyint(1) NOT NULL DEFAULT '0',
+  `rejected` tinyint(1) NOT NULL DEFAULT '0',
+  `rp_initiated` tinyint(1) NOT NULL DEFAULT '0',
+  `nid` char(36) NOT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `requested_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`challenge`),
+  UNIQUE KEY `hydra_oauth2_logout_request_veri_idx` (`verifier`),
+  KEY `hydra_oauth2_logout_request_nid_fk_idx` (`nid`),
+  KEY `hydra_oauth2_logout_request_client_id_fk` (`client_id`,`nid`),
+  CONSTRAINT `hydra_oauth2_logout_request_client_id_fk` FOREIGN KEY (`client_id`, `nid`) REFERENCES `hydra_client` (`id`, `nid`) ON DELETE CASCADE,
+  CONSTRAINT `hydra_oauth2_logout_request_nid_fk_idx` FOREIGN KEY (`nid`) REFERENCES `networks` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
